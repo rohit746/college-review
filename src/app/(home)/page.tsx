@@ -23,6 +23,11 @@ export default function HomePage() {
         </div>
         <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3">
           <Card className="p-6">
+            <University className="text-4xl text-primary" />
+            <h3 className="mt-4 text-xl font-bold">College Profiles</h3>
+            <p className="mt-2">Explore detailed information about colleges.</p>
+          </Card>
+          <Card className="p-6">
             <GraduationCap className="text-4xl text-primary" />
             <h3 className="mt-4 text-xl font-bold">Student Reviews</h3>
             <p className="mt-2">Get insights from current students.</p>
@@ -31,11 +36,6 @@ export default function HomePage() {
             <MessageCirclePlus className="text-4xl text-primary" />
             <h3 className="mt-4 text-xl font-bold">Alumni Reviews</h3>
             <p className="mt-2">Learn from those who have graduated.</p>
-          </Card>
-          <Card className="p-6">
-            <University className="text-4xl text-primary" />
-            <h3 className="mt-4 text-xl font-bold">College Profiles</h3>
-            <p className="mt-2">Explore detailed information about colleges.</p>
           </Card>
         </div>
       </div>

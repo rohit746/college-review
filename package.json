@@ -55,6 +55,9 @@
   },
   "packageManager": "npm@10.2.4",
   "trustedDependencies": [
-    "es5-ext"
+    "bufferutil",
+    "es5-ext",
+    "esbuild",
+    "utf-8-validate"
   ]
 }
