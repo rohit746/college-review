@@ -4,6 +4,7 @@ import { dark } from "@clerk/themes";
 import { ClerkProvider } from "@clerk/nextjs";
 import { GeistSans } from "geist/font/sans";
 import { ThemeProvider } from "~/components/theme-provider";
+import { CSPostHogProvider } from "./_analytics/providers";
 
 export const metadata = {
   title: "College review",
@@ -22,22 +23,24 @@ export default function RootLayout({
         baseTheme: dark,
       }}
     >
-      <html
-        suppressHydrationWarning
-        lang="en"
-        className={`${GeistSans.variable}`}
-      >
-        <body>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-          </ThemeProvider>
-        </body>
-      </html>
+      <CSPostHogProvider>
+        <html
+          suppressHydrationWarning
+          lang="en"
+          className={`${GeistSans.variable}`}
+        >
+          <body>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="dark"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+            </ThemeProvider>
+          </body>
+        </html>
+      </CSPostHogProvider>
     </ClerkProvider>
   );
 }
