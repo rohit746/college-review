@@ -1,5 +1,6 @@
 import "~/styles/globals.css";
 
+import { dark } from "@clerk/themes";
 import { ClerkProvider } from "@clerk/nextjs";
 import { GeistSans } from "geist/font/sans";
 import { ThemeProvider } from "~/components/theme-provider";
@@ -16,7 +17,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={{
+        baseTheme: dark,
+      }}
+    >
       <html
         suppressHydrationWarning
         lang="en"
