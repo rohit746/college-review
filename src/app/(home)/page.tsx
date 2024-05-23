@@ -1,8 +1,18 @@
+"use server";
+
+import { auth } from "@clerk/nextjs/server";
 import { GraduationCap, MessageCirclePlus, University } from "lucide-react";
+import Link from "next/link";
+import { redirect } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const { userId } = auth();
+  if (userId) {
+    redirect("/dashboard");
+  }
+
   return (
     <main>
       <div className="relative flex min-h-screen w-full flex-col items-center justify-center px-4 py-16 bg-grid-black/[0.08] dark:bg-grid-white/[0.08] md:px-8 lg:px-16">
@@ -15,9 +25,11 @@ export default function HomePage() {
             Read reviews from students and alumni to make an informed decision.
           </p>
           <div className="mt-8 flex justify-center gap-4">
-            <Button size={"lg"}>Login</Button>
-            <Button size={"lg"} variant="secondary">
-              Signup
+            <Button size={"lg"} asChild>
+              <Link href={"/sign-up"}>Sign Up</Link>
+            </Button>
+            <Button size={"lg"} asChild variant={"secondary"}>
+              <Link href={"/sign-in"}>Login</Link>
             </Button>
           </div>
         </div>
