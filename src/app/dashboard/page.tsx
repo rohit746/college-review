@@ -46,7 +46,7 @@ export default function DashBoardPage() {
               <Link className="hover:underline" href="#">
                 My Reviews
               </Link>
-              <UserButton />
+              <UserButton afterSignOutUrl="/" />
             </div>
           </div>
         </div>
