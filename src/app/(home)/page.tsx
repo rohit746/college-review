@@ -3,14 +3,14 @@
 import { auth } from "@clerk/nextjs/server";
 import { GraduationCap, MessageCirclePlus, University } from "lucide-react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { RedirectType, redirect } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 
 export default async function HomePage() {
   const { userId } = auth();
   if (userId) {
-    redirect("/dashboard");
+    redirect("/dashboard", RedirectType.replace);
   }
 
   return (
