@@ -1,0 +1,92 @@
+[
+  {
+    "schemaName": "public",
+    "tableName": "college_review_colleges",
+    "predictions": [
+      {
+        "input": "public college_review_colleges id",
+        "column": "id",
+        "shape": "UUID",
+        "confidence": 0.9858093857765198,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public college_review_colleges location",
+        "column": "location",
+        "shape": "LOCATION_BUILDING_NUMBER",
+        "confidence": 0.5388743281364441,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public college_review_colleges name",
+        "column": "name",
+        "shape": "REVIEW",
+        "confidence": 0.56793612241745,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "college_review_reviews",
+    "predictions": [
+      {
+        "input": "public college_review_reviews content",
+        "column": "content",
+        "shape": "POST_BODY",
+        "confidence": 0.7907171845436096,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public college_review_reviews id",
+        "column": "id",
+        "shape": "UUID",
+        "confidence": 0.9973880648612976,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public college_review_reviews user_id",
+        "column": "userId",
+        "shape": "UUID",
+        "confidence": 0.9981251358985901,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  },
+  {
+    "schemaName": "public",
+    "tableName": "t3gallery_image",
+    "predictions": [
+      {
+        "input": "public t_3_gallery_image name",
+        "column": "name",
+        "shape": "IMAGE_DESCRIPTION",
+        "confidence": 0.1624574661254883,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public t_3_gallery_image url",
+        "column": "url",
+        "shape": "IMAGE_URL",
+        "confidence": 0.8801793456077576,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      },
+      {
+        "input": "public t_3_gallery_image user_id",
+        "column": "userId",
+        "shape": "INTERNET_AVATAR",
+        "confidence": 0.4624695181846619,
+        "context": "GENERAL",
+        "confidenceContext": 0
+      }
+    ]
+  }
+]

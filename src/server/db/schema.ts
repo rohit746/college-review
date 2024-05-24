@@ -1,34 +1,46 @@
-// Example model schema from the Drizzle docs
-// https://orm.drizzle.team/docs/sql-schema-declaration
-
-import { sql } from "drizzle-orm";
+import { relations } from "drizzle-orm";
 import {
-  index,
+  foreignKey,
+  integer,
   pgTableCreator,
-  serial,
-  timestamp,
+  text,
   varchar,
 } from "drizzle-orm/pg-core";
 
-/**
- * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
- * database instance for multiple projects.
- *
- * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
- */
-export const createTable = pgTableCreator((name) => `college-review_${name}`);
+export const createTable = pgTableCreator((name) => `college_review_${name}`);
 
-export const posts = createTable(
-  "post",
+// Colleges Table
+export const colleges = createTable("colleges", {
+  id: varchar("id", { length: 255 }).primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  location: varchar("location", { length: 255 }).notNull(),
+});
+
+export const collegesRelations = relations(colleges, ({ many }) => ({
+  reviews: many(reviews),
+}));
+
+// Reviews Table
+export const reviews = createTable(
+  "reviews",
   {
-    id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updatedAt", { withTimezone: true }),
+    id: varchar("id", { length: 255 }).primaryKey(),
+    userId: varchar("userId", { length: 255 }).notNull(), // Clerk user ID
+    collegeId: varchar("collegeId", { length: 255 }).notNull(),
+    content: text("content").notNull(),
+    rating: integer("rating").notNull(),
   },
-  (example) => ({
-    nameIndex: index("name_idx").on(example.name),
-  })
+  (table) => ({
+    collegeFk: foreignKey({
+      columns: [table.collegeId],
+      foreignColumns: [colleges.id],
+    }),
+  }),
 );
+
+export const reviewsRelations = relations(reviews, ({ one }) => ({
+  college: one(colleges, {
+    fields: [reviews.collegeId],
+    references: [colleges.id],
+  }),
+}));
