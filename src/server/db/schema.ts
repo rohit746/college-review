@@ -7,6 +7,7 @@ export const createTable = pgTableCreator((name) => `college_review_${name}`);
 export const colleges = createTable("colleges", {
   id: varchar("id", { length: 255 }).primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
+  image: varchar("image", { length: 255 }).notNull(),
   location: varchar("location", { length: 255 }).notNull(),
 });
 

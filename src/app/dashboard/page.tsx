@@ -23,8 +23,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { getColleges } from "~/server/queries";
 
-export default function DashBoardPage() {
+export const dynamic = "force-dynamic";
+
+export default async function DashBoardPage() {
+  const colleges = await getColleges();
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <header className="bg-background text-white shadow-md">
@@ -101,16 +105,14 @@ export default function DashBoardPage() {
           </Drawer>
         </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          <CollegeCard />
-          <CollegeCard />
-          <CollegeCard />
-          <CollegeCard />
-          <CollegeCard />
-          <CollegeCard />
-          <CollegeCard />
-          <CollegeCard />
-          <CollegeCard />
-          <CollegeCard />
+          {colleges.map((college) => (
+            <CollegeCard
+              key={college.id}
+              name={college.name}
+              image={college.image}
+              location={college.location}
+            />
+          ))}
         </div>
       </main>
     </div>

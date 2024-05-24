@@ -67,6 +67,8 @@
   "packageManager": "npm@10.2.4",
   "trustedDependencies": [
     "@clerk/shared",
+    "@prisma/engines",
+    "@snaplet/seed",
     "bufferutil",
     "es5-ext",
     "esbuild",
