@@ -25,10 +25,24 @@ import {
 } from "~/components/ui/select";
 import { getColleges } from "~/server/queries";
 
+interface Review {
+  id: string;
+  userId: string;
+  collegeId: string;
+  content: string;
+  rating: number;
+}
+
 export const dynamic = "force-dynamic";
 
 export default async function DashBoardPage() {
   const colleges = await getColleges();
+  function calculateAverageRating(reviews: Review[]) {
+    if (reviews.length === 0) return 0;
+    const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+    return totalRating / reviews.length;
+  }
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <header className="bg-background text-white shadow-md">
@@ -106,12 +120,14 @@ export default async function DashBoardPage() {
         </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {colleges.map((college) => (
-            <CollegeCard
-              key={college.id}
-              name={college.name}
-              image={college.image}
-              location={college.location}
-            />
+            <div key={college.id}>
+              <CollegeCard
+                name={college.name}
+                image={college.image}
+                location={college.location}
+                rating={calculateAverageRating(college.reviews).toFixed(2)}
+              />
+            </div>
           ))}
         </div>
       </main>

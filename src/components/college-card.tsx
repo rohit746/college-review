@@ -7,10 +7,12 @@ export function CollegeCard({
   name,
   image,
   location,
+  rating,
 }: {
   name: string;
   image: string;
   location: string;
+  rating: string;
 }) {
   return (
     <Card className="h-full rounded-lg bg-background shadow-md transition-shadow duration-300 hover:shadow-lg dark:shadow-lg">
@@ -43,7 +45,7 @@ export function CollegeCard({
         <div className="flex items-center gap-2">
           <StarIcon className="h-4 w-4 fill-yellow-500" />
           <span className="text-sm font-semibold text-gray-900 dark:text-white">
-            4.9
+            {rating}
           </span>
         </div>
       </CardContent>
