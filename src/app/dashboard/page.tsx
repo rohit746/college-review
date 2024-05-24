@@ -125,7 +125,7 @@ export default async function DashBoardPage() {
                 name={college.name}
                 image={college.image}
                 location={college.location}
-                rating={calculateAverageRating(college.reviews).toFixed(2)}
+                rating={calculateAverageRating(college.reviews).toFixed(1)}
               />
             </div>
           ))}
