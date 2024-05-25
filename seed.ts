@@ -22,4 +22,4 @@ const main = async () => {
   process.exit();
 };
 
-main();
+void main();

@@ -1,8 +1,9 @@
 import { UserButton } from "@clerk/nextjs";
-import { FilterIcon, SchoolIcon, SearchIcon } from "lucide-react";
+import { FilterIcon, SchoolIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { CollegeCard } from "~/components/college-card";
+import { Search } from "~/components/search";
 import { Button } from "~/components/ui/button";
 import {
   Drawer,
@@ -14,7 +15,6 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "~/components/ui/drawer";
-import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import {
   Select,
@@ -23,24 +23,65 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { getColleges } from "~/server/queries";
+import { calculateAverageRating } from "~/lib/utils";
+import { vectorize } from "~/lib/vectorize";
+import { SearchColleges } from "~/server/queries";
+import { Index } from "@upstash/vector";
 
-interface Review {
+interface Colleges {
   id: string;
-  userId: string;
-  collegeId: string;
-  content: string;
-  rating: number;
+  name: string;
+  image: string;
+  location: string;
+  reviews: {
+    id: string;
+    userId: string;
+    collegeId: string;
+    content: string;
+    rating: number;
+  }[];
 }
+
+const index = new Index({
+  url: process.env.UPSTASH_VECTOR_REST_URL,
+  token: process.env.UPSTASH_VECTOR_REST_TOKEN,
+});
 
 export const dynamic = "force-dynamic";
 
-export default async function DashBoardPage() {
-  const colleges = await getColleges();
-  function calculateAverageRating(reviews: Review[]) {
-    if (reviews.length === 0) return 0;
-    const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
-    return totalRating / reviews.length;
+export default async function DashBoardPage({
+  searchParams,
+}: {
+  searchParams: Record<string, string | string[] | undefined>;
+}) {
+  const search =
+    typeof searchParams.search === "string" ? searchParams.search : "";
+
+  const colleges = await SearchColleges(search);
+
+  if (colleges.length < 3) {
+    const vector = await vectorize(search);
+
+    const res = await index.query({
+      topK: 5,
+      vector,
+      includeMetadata: true,
+    });
+
+    const vectorColleges = res
+      .filter((existingCollege) => {
+        if (
+          colleges.some((college) => college.id == existingCollege.id) ||
+          existingCollege.score < 0.9
+        ) {
+          return false;
+        } else {
+          return true;
+        }
+      })
+      .map(({ metadata }) => metadata as unknown as Colleges);
+
+    colleges.push(...vectorColleges);
   }
 
   return (
@@ -52,14 +93,7 @@ export default async function DashBoardPage() {
             <span className="text-lg font-semibold">College Reviews</span>
           </Link>
           <div className="mt-4 flex w-full items-center justify-center gap-4 md:mt-0 md:w-auto">
-            <form className="relative w-full max-w-md md:w-auto">
-              <SearchIcon className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400 dark:text-gray-300" />
-              <Input
-                className="w-full rounded-md py-2 pl-10 pr-4 focus:outline-none focus:ring-2 md:w-auto"
-                placeholder="Search colleges..."
-                type="search"
-              />
-            </form>
+            <Search search={search} />
             <div className="ml-auto flex items-center gap-4">
               <Link className="hover:underline" href="#">
                 My Reviews
@@ -69,7 +103,7 @@ export default async function DashBoardPage() {
           </div>
         </div>
       </header>
-      <main className="container mx-auto px-4 py-8 md:px-6 lg:py-12">
+      <main className="container mx-auto flex flex-1 flex-col px-4 py-8 md:px-6 lg:py-12">
         <div className="mb-8 flex items-center justify-between">
           <div className="text-lg font-semibold">Explore Colleges</div>
           <Drawer>
@@ -118,17 +152,23 @@ export default async function DashBoardPage() {
             </DrawerContent>
           </Drawer>
         </div>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {colleges.map((college) => (
-            <div key={college.id}>
-              <CollegeCard
-                name={college.name}
-                image={college.image}
-                location={college.location}
-                rating={calculateAverageRating(college.reviews).toFixed(1)}
-              />
+        <div className="flex w-full flex-1 items-center justify-center">
+          {colleges.length === 0 ? (
+            <div className="text-center">Sorry, no results found</div>
+          ) : (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {colleges.map((college) => (
+                <div key={college.id}>
+                  <CollegeCard
+                    name={college.name}
+                    image={college.image}
+                    location={college.location}
+                    rating={calculateAverageRating(college.reviews).toFixed(1)}
+                  />
+                </div>
+              ))}
             </div>
-          ))}
+          )}
         </div>
       </main>
     </div>
