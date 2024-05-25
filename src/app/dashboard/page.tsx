@@ -158,14 +158,18 @@ export default async function DashBoardPage({
           ) : (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               {colleges.map((college) => (
-                <div key={college.id}>
-                  <CollegeCard
-                    name={college.name}
-                    image={college.image}
-                    location={college.location}
-                    rating={calculateAverageRating(college.reviews).toFixed(1)}
-                  />
-                </div>
+                <Link key={college.id} href={`/college/${college.id}`}>
+                  <div>
+                    <CollegeCard
+                      name={college.name}
+                      image={college.image}
+                      location={college.location}
+                      rating={calculateAverageRating(college.reviews).toFixed(
+                        1,
+                      )}
+                    />
+                  </div>
+                </Link>
               ))}
             </div>
           )}
